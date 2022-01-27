@@ -15,8 +15,10 @@
         <InkCanvas x:Name="ink" Margin="154,75,154,75" Grid.ColumnSpan="2">
 
         </InkCanvas>
-        <Button Content="Get" HorizontalAlignment="Left" Margin="202,366,0,0" VerticalAlignment="Top" Height="32" Width="81" Click="Button_Click" Grid.Column="1"/>
+        <Button Content="Get" HorizontalAlignment="Left" Margin="205,368,0,0" VerticalAlignment="Top" Height="30" Width="81" Click="ButtonGet" Grid.Column="1"/>
         <Button Grid.Column="1" Content="Clear" HorizontalAlignment="Center" Margin="0,368,0,0" VerticalAlignment="Top" Height="30" Width="82" Click="Button_Click_1"/>
         <TextBox x:Name="coordinates" Grid.Column="1" HorizontalAlignment="Left" Margin="177,75,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Edit" HorizontalAlignment="Left" Margin="205,329,0,0" VerticalAlignment="Top" Height="30" Width="81" Click="ButtonEdit" Grid.Column="1"/>
+        <ListBox x:Name="list" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,0,361,10"/>
     </Grid>
 </Window>
