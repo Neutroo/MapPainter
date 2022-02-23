@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,23 +14,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MapPainter
+namespace MapPainter.View
 {
-    public partial class MainWindow : Window
+    public partial class PaintPage : Page
     {
-        private List<StylusPoint> points = new();
         private List<double> angles = new();
         private List<double> lengths = new();
         private double startX = 0;
         private double startY = 0;
 
-
-        public MainWindow()
+        public PaintPage()
         {
             InitializeComponent();
             inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
-            
-            Stroke stroke = new Stroke(new StylusPointCollection()
+
+            Stroke stroke = new (new StylusPointCollection()
                 {
                     new StylusPoint(startX,420-startY),
                     new StylusPoint(startX,420-startY),
@@ -77,7 +74,6 @@ namespace MapPainter
         {
             inkCanvas.Strokes.Clear();
             list.Items.Clear();
-            points.Clear();
             angles.Clear();
             lengths.Clear();
             coordinates.Text = string.Empty;
@@ -87,19 +83,19 @@ namespace MapPainter
         {
             if (inkCanvas.Strokes.Count.Equals(0))
             {
-                
-                Stroke stroke = new Stroke(new StylusPointCollection()
+
+                Stroke stroke = new (new StylusPointCollection()
                 {
-                    new StylusPoint(startX, 420-startY),
+                    new StylusPoint(startX, 420 - startY),
                     new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y),
                 });
 
-                if (e.GetPosition(inkCanvas).Y <= 420-startY)
-                    angles.Add(90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-startX)/(e.GetPosition(inkCanvas).Y-420+startY)));
+                if (e.GetPosition(inkCanvas).Y <= 420 - startY)
+                    angles.Add(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - startX) / (e.GetPosition(inkCanvas).Y - 420 + startY)));
                 else
-                    angles.Add(-90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-startX)/(e.GetPosition(inkCanvas).Y-420+startY)));
-                    
-                lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - startX, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - 420+ startY, 2)));
+                    angles.Add(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - startX) / (e.GetPosition(inkCanvas).Y - 420 + startY)));
+
+                lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - startX, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - 420 + startY, 2)));
 
                 inkCanvas.Strokes.Add(stroke);
             }
@@ -110,27 +106,25 @@ namespace MapPainter
                 foreach (Stroke s in inkCanvas.Strokes)
                     firstPoint = s.StylusPoints[^1];
 
-                Stroke stroke = new Stroke(new StylusPointCollection()
+                Stroke stroke = new (new StylusPointCollection()
                 {
                     firstPoint,
                     new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y),
                 });
 
-                //angles.Add(180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X)/(e.GetPosition(inkCanvas).Y - firstPoint.Y)));
-
                 if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                    angles.Add(90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-firstPoint.X)/(e.GetPosition(inkCanvas).Y-firstPoint.Y)));
+                    angles.Add(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
                 else
-                    angles.Add(-90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-firstPoint.X)/(e.GetPosition(inkCanvas).Y-firstPoint.Y)));
+                    angles.Add(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
 
                 lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
-                
+
                 inkCanvas.Strokes.Add(stroke);
             }
         }
 
         private string GetRoute()
-        {       
+        {
             string route = string.Empty;
             for (int i = 0; i < lengths.Count; ++i)
                 route += $"{angles[i]};{lengths[i]}\n";
