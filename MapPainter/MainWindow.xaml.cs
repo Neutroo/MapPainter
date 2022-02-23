@@ -20,12 +20,26 @@ namespace MapPainter
     public partial class MainWindow : Window
     {
         private List<StylusPoint> points = new();
-        List<Vector2> vectors = new();
+        private List<double> angles = new();
+        private List<double> lengths = new();
+        private double startX = 0;
+        private double startY = 0;
+
 
         public MainWindow()
         {
             InitializeComponent();
             inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
+            
+            Stroke stroke = new Stroke(new StylusPointCollection()
+                {
+                    new StylusPoint(startX,420-startY),
+                    new StylusPoint(startX,420-startY),
+                });
+
+            //geometries.Add(new Vector2((float)(stroke.GetGeometry().Bounds.TopRight.X - stroke.GetGeometry().Bounds.BottomLeft.X),
+            //    (float)(stroke.GetGeometry().Bounds.TopRight.Y - stroke.GetGeometry().Bounds.BottomLeft.Y)));\
+            inkCanvas.Strokes.Add(stroke);
         }
 
         private void ButtonGet(object sender, RoutedEventArgs e)
@@ -51,27 +65,48 @@ namespace MapPainter
                     //coordinates.Text = $"x:{sp.X}, y:{sp.Y}";
                 }
             }
-            MessageBox.Show($"points:{cnt}\nstrokes:{inkCanvas.Strokes.Count}\nvectors:{vectors.Count}");
+            MessageBox.Show($"points:{cnt}\nstrokes:{inkCanvas.Strokes.Count}\n");
         }
 
         private void ButtonEdit(object sender, RoutedEventArgs e)
         {
-            coordinates.Text = GetRoute(vectors);
+            coordinates.Text = GetRoute();
         }
 
         private void ButtonClear(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
             list.Items.Clear();
-            vectors.Clear();
+            points.Clear();
+            angles.Clear();
+            lengths.Clear();
             coordinates.Text = string.Empty;
         }
 
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!inkCanvas.Strokes.Count.Equals(0))
+            if (inkCanvas.Strokes.Count.Equals(0))
+            {
+                
+                Stroke stroke = new Stroke(new StylusPointCollection()
+                {
+                    new StylusPoint(startX, 420-startY),
+                    new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y),
+                });
+
+                if (e.GetPosition(inkCanvas).Y <= 420-startY)
+                    angles.Add(90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-startX)/(e.GetPosition(inkCanvas).Y-420+startY)));
+                else
+                    angles.Add(-90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-startX)/(e.GetPosition(inkCanvas).Y-420+startY)));
+                    
+                lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - startX, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - 420+ startY, 2)));
+
+                inkCanvas.Strokes.Add(stroke);
+            }
+            else
             {
                 StylusPoint firstPoint;
+
                 foreach (Stroke s in inkCanvas.Strokes)
                     firstPoint = s.StylusPoints[^1];
 
@@ -81,34 +116,37 @@ namespace MapPainter
                     new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y),
                 });
 
-                vectors.Add(new Vector2((float)(stroke.GetGeometry().Bounds.TopRight.X - stroke.GetGeometry().Bounds.TopLeft.X), 
-                    (float)(stroke.GetGeometry().Bounds.TopRight.Y - stroke.GetGeometry().Bounds.TopLeft.Y)));
+                //angles.Add(180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X)/(e.GetPosition(inkCanvas).Y - firstPoint.Y)));
+
+                if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
+                    angles.Add(90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-firstPoint.X)/(e.GetPosition(inkCanvas).Y-firstPoint.Y)));
+                else
+                    angles.Add(-90+180/3.14159264*Math.Atan((e.GetPosition(inkCanvas).X-firstPoint.X)/(e.GetPosition(inkCanvas).Y-firstPoint.Y)));
+
+                lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
+                
                 inkCanvas.Strokes.Add(stroke);
             }
         }
 
-        private static string GetRoute(List<Vector2> vectors)
+        private string GetRoute()
         {       
-            List<float> angles = new() { 0 };
-            for (int i = 0; i < vectors.Count - 1; ++i)
-            {
-                //angles.Add(Math.Acos(Math.Abs(geometries[i].Bounds.TopLeft.X * geometries[i + 1].Bounds.TopLeft.X
-                //    + geometries[i].Bounds.TopLeft.Y * geometries[i + 1].Bounds.TopLeft.Y)
-                //    / (Math.Sqrt(Math.Pow(geometries[i].Bounds.TopLeft.X, 2) + Math.Pow(geometries[i].Bounds.TopLeft.Y, 2))
-                //    * Math.Sqrt(Math.Pow(geometries[i + 1].Bounds.TopLeft.X, 2) + Math.Pow(geometries[i + 1].Bounds.TopLeft.Y, 2)))));
-
-                angles.Add((float)Math.Cos(Vector2.Dot(vectors[i], vectors[i + 1]) / (vectors[i].Length() * vectors[i + 1].Length())));
-            }
-
-            List<float> lenght = new();
-            foreach (Vector2 vec in vectors)
-                //lenght.Add((int)Math.Sqrt(Math.Pow(geom.Bounds.TopRight.X - geom.Bounds.TopLeft.X, 2) + Math.Pow(geom.Bounds.TopRight.Y - geom.Bounds.TopLeft.Y, 2)));
-                lenght.Add(vec.Length());
-
             string route = string.Empty;
-            for (int i = 0; i < lenght.Count; ++i)
-                route += $"{angles[i]};{lenght[i]}\n";
+            for (int i = 0; i < lengths.Count; ++i)
+                route += $"{angles[i]};{lengths[i]}\n";
             return route;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            startX = Math.Floor(e.NewValue);
+            cords.Content = $"{startX} ; {startY}";
+        }
+
+        private void Slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            startY = Math.Floor(e.NewValue);
+            cords.Content = $"{startX} ; {startY}";
         }
     }
 }
