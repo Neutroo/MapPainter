@@ -5,24 +5,51 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MapPainter.View"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="720" 
+      d:DesignWidth="1280"
       Title="PaintPage"
-      Background="Black">
+      Background="#FF151523">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="494*"/>
-            <ColumnDefinition Width="307*"/>
-        </Grid.ColumnDefinitions>
-        <InkCanvas x:Name="inkCanvas" Margin="154,140,154,10" Grid.ColumnSpan="2" MouseDown="CanvasMouseDown" Background="White"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <Button Content="Get" HorizontalAlignment="Left" Margin="246,468,0,0" VerticalAlignment="Top" Height="30" Width="81" Click="ButtonGet" Grid.Column="1"/>
-        <Button Grid.Column="1" Content="Clear" HorizontalAlignment="Left" Margin="205,353,0,0" VerticalAlignment="Top" Height="30" Width="82" Click="ButtonClear"/>
-        <TextBox x:Name="coordinates" HorizontalAlignment="Left" Margin="154,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Height="125"/>
-        <Button Content="Edit" HorizontalAlignment="Left" Margin="206,400,0,0" VerticalAlignment="Top" Height="30" Width="81" Click="ButtonEdit" Grid.Column="1"/>
-        <ListBox x:Name="list" Margin="0,10,487,10"/>
-        <Slider HorizontalAlignment="Left" Margin="154,135,0,0" VerticalAlignment="Top" Width="493" Height="20" RenderTransformOrigin="0.5,0.5" ValueChanged="Slider_ValueChanged" SmallChange="10" LargeChange="100" Maximum="670" Grid.ColumnSpan="2"/>
-        <Slider HorizontalAlignment="Left" Margin="2,281,0,0" VerticalAlignment="Top" Width="298" Height="20" RenderTransformOrigin="0.5,0.5" ValueChanged="Slider_ValueChanged_1" SmallChange="10" Maximum="420" LargeChange="100">
+            <Border MouseDown="BorderMouseDown" 
+                    Background="#FF913781"
+                    Opacity="0.8">
+                <Grid HorizontalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Right" 
+                            Orientation="Horizontal">
+                        <Button Width="20" Height="20"
+                            Content="✖"
+                            Background="Transparent"
+                            BorderThickness="0" 
+                            Click="ButtonClose"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+
+        <Grid Margin="102,274,528,76" Background="#FF241F55"
+                       Opacity="0.5">
+            <Border BorderThickness="1" BorderBrush="#FFF17866"/>
+            <InkCanvas x:Name="inkCanvas"                         
+                       MouseDown="CanvasMouseDown" 
+                       Background="Transparent" ResizeEnabled="True">
+            </InkCanvas>
+        </Grid>
+
+
+        <Button Content="Get" HorizontalAlignment="Left" Margin="836,614,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="ButtonGet"/>
+        <Button Content="Clear" HorizontalAlignment="Left" Margin="836,495,0,0" VerticalAlignment="Top" Height="30" Width="82" Click="ButtonClear"/>
+        <TextBox x:Name="coordinates" Background="#FF241F55" HorizontalAlignment="Left" Margin="102,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" Height="126"/>
+        <Button Content="Edit" HorizontalAlignment="Left" Margin="836,560,0,0" VerticalAlignment="Top" Height="30" Width="81" Click="ButtonEdit"/>
+        <Slider HorizontalAlignment="Left" Margin="102,250,0,0" VerticalAlignment="Top" Width="549" Height="20" RenderTransformOrigin="0.5,0.5" ValueChanged="Slider_ValueChanged" SmallChange="10" LargeChange="100" Maximum="670"/>
+        <Slider HorizontalAlignment="Left" Margin="-81,464,0,0" Width="340" RenderTransformOrigin="0.5,0.5" ValueChanged="Slider_ValueChanged_1" SmallChange="10" Maximum="420" LargeChange="100" Height="20" VerticalAlignment="Top">
             <Slider.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -32,6 +59,6 @@
                 </TransformGroup>
             </Slider.RenderTransform>
         </Slider>
-        <Label x:Name="cords" Content="0 ; 0" HorizontalAlignment="Left" Margin="348,109,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="cords" Foreground="#FFF17866" Content="0 ; 0" HorizontalAlignment="Left" Margin="376,224,0,0" VerticalAlignment="Top" Height="26" Width="32"/>
     </Grid>
 </Page>

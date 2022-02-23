@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Images\background.jpg" />
+    <None Remove="Images\paingbackground.jpg" />
   </ItemGroup>
 
   <ItemGroup>

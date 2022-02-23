@@ -29,6 +29,7 @@ namespace MapPainter.View
         private void ButtonClose(object sender, RoutedEventArgs e) 
             => Application.Current.Shutdown();
 
+        // Edit name!
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -37,7 +38,7 @@ namespace MapPainter.View
 
         private void ButtonConnect(object sender, RoutedEventArgs e)
         {
-
+            Application.Current.MainWindow.Content = new PaintPage();
         }
     }
 }

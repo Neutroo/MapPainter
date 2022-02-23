@@ -73,7 +73,6 @@ namespace MapPainter.View
         private void ButtonClear(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
-            list.Items.Clear();
             angles.Clear();
             lengths.Clear();
             coordinates.Text = string.Empty;
@@ -141,6 +140,15 @@ namespace MapPainter.View
         {
             startY = Math.Floor(e.NewValue);
             cords.Content = $"{startX} ; {startY}";
+        }
+
+        private void ButtonClose(object sender, RoutedEventArgs e)
+            => Application.Current.Shutdown();
+
+        private void BorderMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                Application.Current.MainWindow.DragMove();
         }
     }
 }
