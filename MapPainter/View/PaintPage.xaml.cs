@@ -23,7 +23,7 @@ namespace MapPainter.View
         private double startX = 0;
         private double startY = 0;
 
-        public PaintPage()
+        public PaintPage(string portName)
         {
             InitializeComponent();
             inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);

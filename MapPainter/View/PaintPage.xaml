@@ -44,7 +44,7 @@
         </Grid>
 
 
-        <Button Content="Get" HorizontalAlignment="Left" Margin="836,614,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="ButtonGet"/>
+        <Button x:Name="buttonGet" Content="Get" HorizontalAlignment="Left" Margin="836,614,0,0" VerticalAlignment="Top" Height="30" Width="80" Click="ButtonGet"/>
         <Button Content="Clear" HorizontalAlignment="Left" Margin="836,495,0,0" VerticalAlignment="Top" Height="30" Width="82" Click="ButtonClear"/>
         <TextBox x:Name="coordinates" Background="#FF241F55" HorizontalAlignment="Left" Margin="102,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="190" Height="126"/>
         <Button Content="Edit" HorizontalAlignment="Left" Margin="836,560,0,0" VerticalAlignment="Top" Height="30" Width="81" Click="ButtonEdit"/>

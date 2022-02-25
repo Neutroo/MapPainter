@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,17 +21,19 @@ namespace MapPainter.View
         public ConnectPage()
         {
             InitializeComponent();
-            comboBoxPorts.Items.Add("some item1");
-            comboBoxPorts.Items.Add("some item2");
-            comboBoxPorts.Items.Add("some item3");
+
+            string[] ports = SerialPort.GetPortNames();
+            
+            foreach (string port in ports)
+                comboBoxPorts.Items.Add(port);
+
             comboBoxPorts.SelectedIndex = 0;
         }
 
         private void ButtonClose(object sender, RoutedEventArgs e) 
             => Application.Current.Shutdown();
 
-        // Edit name!
-        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        private void BorderMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 Application.Current.MainWindow.DragMove();
@@ -38,7 +41,7 @@ namespace MapPainter.View
 
         private void ButtonConnect(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.Content = new PaintPage();
+            Application.Current.MainWindow.Content = new PaintPage(comboBoxPorts.Text);
         }
     }
 }
