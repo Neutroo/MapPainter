@@ -119,7 +119,7 @@
                                 <SolidColorBrush Color="#FF6A6ACC"/>
                             </Border.BorderBrush>
                             <Border x:Name="splitBorder" BorderBrush="Transparent" HorizontalAlignment="Right" SnapsToDevicePixels="true" Margin="2" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                <Path x:Name="arrow" Data="M 1 0 L 6 4.5 L 11 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#FF6A6ACC"/>
+                                <Path x:Name="arrow" Data="M 1 0 L 6 4.5 L 11 0 Z" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="White"/>
                             </Border>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -142,6 +142,7 @@
                                 </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" TargetName="templateRoot" Value="White"/>
                                 <Setter Property="BorderBrush" TargetName="templateRoot" Value="White"/>
+                                <Setter Property="Fill" TargetName="arrow" Value="#FF6A6ACC"/>
                             </MultiDataTrigger>
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
