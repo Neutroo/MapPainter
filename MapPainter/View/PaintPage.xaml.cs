@@ -34,7 +34,7 @@ namespace MapPainter.View
                 new StylusPoint(startX, 420 - startY),
             });
 
-            stroke.DrawingAttributes.Color = Color.FromRgb(106, 106, 204);
+            stroke.DrawingAttributes.Color = Colors.AliceBlue;
 
             inkCanvas.Strokes.Add(stroke);
         }
@@ -71,7 +71,7 @@ namespace MapPainter.View
                     firstPoint,
                     new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y),
                 });
-                stroke.DrawingAttributes.Color = Colors.AliceBlue; //Color.FromRgb(106, 106, 204);
+                stroke.DrawingAttributes.Color = Colors.AliceBlue;
 
                 if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
                     angles.Add(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
