@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:MapPainter"
              StartupUri="View\MainWindow.xaml">
     <Application.Resources>
-
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="UITemplates\ComboBox.xaml"/>
+                <ResourceDictionary Source="UITemplates\Button.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

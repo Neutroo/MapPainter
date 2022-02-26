@@ -29,53 +29,14 @@ namespace MapPainter.View
             inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
 
             Stroke stroke = new (new StylusPointCollection()
-                {
-                    new StylusPoint(startX,420-startY),
-                    new StylusPoint(startX,420-startY),
-                });
-
-            //geometries.Add(new Vector2((float)(stroke.GetGeometry().Bounds.TopRight.X - stroke.GetGeometry().Bounds.BottomLeft.X),
-            //    (float)(stroke.GetGeometry().Bounds.TopRight.Y - stroke.GetGeometry().Bounds.BottomLeft.Y)));\
-            inkCanvas.Strokes.Add(stroke);
-        }
-
-        private void ButtonGet(object sender, RoutedEventArgs e)
-        {
-            //foreach (var str in strokes)
-            //{
-            //    MessageBox.Show(str.StylusPoints[str.StylusPoints.Count].ToString());
-            //    StylusPoint point = new(str.StylusPoints[str.StylusPoints.Count].X, str.StylusPoints[str.StylusPoints.Count].Y);
-            //    str.StylusPoints.Add(point);
-            //}
-
-            //foreach (Stroke s in ink.Strokes)
-            //    for (int i = 0; i < s.StylusPoints.Count - 1; ++i)
-            //        s.StylusPoints.Add(new StylusPoint(100, 100));
-            int cnt = 0;
-            foreach (Stroke s in inkCanvas.Strokes)
             {
-                /*MessageBox.Show($"x:{s.GetGeometry().Bounds.TopLeft.X}, y:{s.GetGeometry().Bounds.TopLeft.Y}\n" +
-                    $"x:{s.GetGeometry().Bounds.TopRight.X}, y:{s.GetGeometry().Bounds.TopRight.Y}");*/
-                foreach (StylusPoint sp in s.StylusPoints)
-                {
-                    ++cnt;
-                    //coordinates.Text = $"x:{sp.X}, y:{sp.Y}";
-                }
-            }
-            MessageBox.Show($"points:{cnt}\nstrokes:{inkCanvas.Strokes.Count}\n");
-        }
+                new StylusPoint(startX, 420 - startY),
+                new StylusPoint(startX, 420 - startY),
+            });
 
-        private void ButtonEdit(object sender, RoutedEventArgs e)
-        {
-            coordinates.Text = GetRoute();
-        }
+            stroke.DrawingAttributes.Color = Color.FromRgb(106, 106, 204);
 
-        private void ButtonClear(object sender, RoutedEventArgs e)
-        {
-            inkCanvas.Strokes.Clear();
-            angles.Clear();
-            lengths.Clear();
-            coordinates.Text = string.Empty;
+            inkCanvas.Strokes.Add(stroke);
         }
 
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
@@ -110,6 +71,7 @@ namespace MapPainter.View
                     firstPoint,
                     new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y),
                 });
+                stroke.DrawingAttributes.Color = Colors.AliceBlue; //Color.FromRgb(106, 106, 204);
 
                 if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
                     angles.Add(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
@@ -133,13 +95,13 @@ namespace MapPainter.View
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             startX = Math.Floor(e.NewValue);
-            cords.Content = $"{startX} ; {startY}";
+            //cords.Content = $"{startX} ; {startY}";
         }
 
         private void Slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             startY = Math.Floor(e.NewValue);
-            cords.Content = $"{startX} ; {startY}";
+            //cords.Content = $"{startX} ; {startY}";
         }
 
         private void ButtonClose(object sender, RoutedEventArgs e)
@@ -149,6 +111,16 @@ namespace MapPainter.View
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 Application.Current.MainWindow.DragMove();
+        }
+
+        private void MenuButtonClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Content = new ConnectPage();
+        }
+
+        private void LaunchButtonClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(GetRoute());
         }
     }
 }
