@@ -31,16 +31,21 @@ namespace MapPainter.View
         {
             InitializeComponent();
             inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
+            try
+            {
+                serialPort = new(portName);
+                serialPort.BaudRate = 9600;
+                if (!serialPort.IsOpen)
+                    serialPort.Open();
+                else
+                    throw new Exception("port already open");
+                serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+            }
+            catch
+            {
 
-            serialPort = new (portName);
-            serialPort.BaudRate = 9600;
-            
-            if (!serialPort.IsOpen)
-                serialPort.Open();
-            else
-                throw new Exception("port already open");
-
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+            }
+                       
         }
 
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
@@ -133,15 +138,15 @@ namespace MapPainter.View
             sX = e.GetPosition(inkCanvas).X;
             sY = e.GetPosition(inkCanvas).Y;
 
-            if (e.GetPosition(this).X - robot.Width / 2 < 0)
-                sX = 0;
-            else if (e.GetPosition(this).X - robot.Width / 2 > 1186)
-                sX = 1186;
+            if (e.GetPosition(this).X - robot.Width / 2 < 20)
+                sX = 20;
+            else if (e.GetPosition(this).X - robot.Width / 2 > 1200)
+                sX = 1200;
 
-            if (e.GetPosition(this).Y - robot.Height / 2 < 0)
-                sY = 0;
-            else if (e.GetPosition(this).Y - robot.Height / 2 > 555)
-                sY = 555;
+            if (e.GetPosition(this).Y - robot.Height / 2 < 40)
+                sY = 40;
+            else if (e.GetPosition(this).Y - robot.Height / 2 > 505)
+                sY = 605;
 
             firstPoint = new StylusPoint(sX,sY);
         }
@@ -150,9 +155,9 @@ namespace MapPainter.View
         {
             if (isMoving)
             {
-                if(e.GetPosition(this).X - robot.Width / 2 > 0 && e.GetPosition(this).X - robot.Width / 2 < 1186)
+                if(e.GetPosition(this).X - robot.Width / 2 > 20 && e.GetPosition(this).X - robot.Width / 2 < 1200)
                     Canvas.SetLeft(robot, e.GetPosition(this).X - robot.Width / 2);
-                if(e.GetPosition(this).Y - robot.Height / 2 > 0 && e.GetPosition(this).Y - robot.Height / 2 < 555)
+                if(e.GetPosition(this).Y - robot.Height / 2 > 40 && e.GetPosition(this).Y - robot.Height / 2 < 605)
                     Canvas.SetTop(robot, e.GetPosition(this).Y - robot.Height / 2);
             }
         }
