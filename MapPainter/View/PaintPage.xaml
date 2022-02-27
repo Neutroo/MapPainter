@@ -93,8 +93,20 @@
                 </Style>
             </Button.Style>
         </Button>
+        
         <Canvas>
-            <Image x:Name ="startPosition" Height="100" Grid.RowSpan="2" Width="100" MouseUp ="startPosition_MouseUp"  MouseMove ="startPosition_MouseMove" Source="/View/delivery.png" MouseDown="startPosition_MouseDown" Canvas.Left="562" Canvas.Top="306" Visibility="Hidden"/>
+            <Image x:Name ="robot" 
+                   Height="52" 
+                   Width="52"
+                   Grid.RowSpan="2" 
+                   MouseUp ="RobotMouseUp" 
+                   MouseMove ="RobotMouseMove" 
+                   Source="/Images/robot.png" 
+                   MouseDown="RobotMouseDown" 
+                   Canvas.Left="562" 
+                   Canvas.Top="306" 
+                   Visibility="Hidden">
+            </Image>
         </Canvas>
     </Grid>
 </Page>
