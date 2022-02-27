@@ -30,22 +30,16 @@ namespace MapPainter.View
         public PaintPage(string portName)
         {
             InitializeComponent();
-            inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
-            try
-            {
-                serialPort = new(portName);
-                serialPort.BaudRate = 9600;
-                if (!serialPort.IsOpen)
-                    serialPort.Open();
-                else
-                    throw new Exception("port already open");
-                serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
-            }
-            catch
-            {
-
-            }
-                       
+            inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);           
+            
+            serialPort = new(portName);
+            serialPort.BaudRate = 9600;
+            if (!serialPort.IsOpen)
+                serialPort.Open();
+            else
+                throw new Exception("port already open");
+            
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);                     
         }
 
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
