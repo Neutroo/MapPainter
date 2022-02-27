@@ -32,7 +32,6 @@ namespace MapPainter.View
 
         private void ButtonClose(object sender, RoutedEventArgs e) 
             => Application.Current.Shutdown();
-
         private void BorderMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)

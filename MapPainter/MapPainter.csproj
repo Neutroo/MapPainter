@@ -10,6 +10,8 @@
   <ItemGroup>
     <None Remove="Images\background.jpg" />
     <None Remove="Images\paingbackground.jpg" />
+    <None Remove="View\-1.png" />
+    <None Remove="View\delivery.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System.Drawing">
+      <HintPath>bin\Debug\net6.0-windows\System.Drawing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\background.jpg" />
+    <Resource Include="View\delivery.png" />
   </ItemGroup>
 
 </Project>
