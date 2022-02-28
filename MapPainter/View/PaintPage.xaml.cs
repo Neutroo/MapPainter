@@ -160,7 +160,7 @@ namespace MapPainter.View
         {
             string route = string.Empty;
             for (int i = 0; i < lengths.Count; ++i)
-                route += $"{angles[i]}\n{lengths[i]}\n";
+                route += $"{angles[i]} {lengths[i]}\n";
             return route;
         }
 
