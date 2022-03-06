@@ -31,16 +31,17 @@ namespace MapPainter.View
         public PaintPage(string portName)
         {
             InitializeComponent();
-            inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);           
-            
-            serialPort = new(portName);
-            serialPort.BaudRate = 9600;
-            if (!serialPort.IsOpen)
-                serialPort.Open();
-            else
-                throw new Exception("port already open");
-            
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);                     
+            inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
+
+
+                serialPort = new(portName);
+                serialPort.BaudRate = 9600;
+                if (!serialPort.IsOpen)
+                    serialPort.Open();
+                else
+                    throw new Exception("port already open");
+
+                serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
         }
 
         private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
@@ -76,13 +77,14 @@ namespace MapPainter.View
                 {
                     if (angles.Count == 0)
                     {
+                        
                         lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
                         if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                            angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))));
+                            first_angle = (int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
                         else
-                            angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))));
+                            first_angle = (int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
+                        angles.Add(0);
                         
-                        first_angle = angles[0];
                         inkCanvas.Strokes.Add(stroke);
                     }
                     else
@@ -118,14 +120,7 @@ namespace MapPainter.View
 
         private void LaunchButtonClick(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //serialPort.WriteLine(GetRoute());
-            }
-            catch
-            {
-
-            }
+            serialPort.WriteLine(GetRoute());
             MessageBox.Show(GetRoute());
         }
 
