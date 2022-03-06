@@ -26,6 +26,7 @@ namespace MapPainter.View
         private List<StylusPoint> points = new();
         private StylusPoint firstPoint;
         private bool isFirstPointCreated;
+        private double first_angle = 0;
 
         public PaintPage(string portName)
         {
@@ -76,16 +77,29 @@ namespace MapPainter.View
                 points.Add(secondPoint);
 
                 stroke.DrawingAttributes.Color = Colors.AliceBlue;
-                
+
                 if((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)) != 0)
                 {
-                    lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
-
-                    if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                        angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))));
+                    if (angles.Count == 0)
+                    {
+                        lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
+                        if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
+                            angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))));
+                        else
+                            angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))));
+                        
+                        first_angle = angles[0];
+                        inkCanvas.Strokes.Add(stroke);
+                    }
                     else
-                        angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))));
-                    inkCanvas.Strokes.Add(stroke);
+                    {
+                        lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
+                        if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
+                            angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)))-first_angle);
+                        else
+                            angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)))-first_angle);
+                        inkCanvas.Strokes.Add(stroke);
+                    }
                 }                    
             }
         }
@@ -110,7 +124,14 @@ namespace MapPainter.View
 
         private void LaunchButtonClick(object sender, RoutedEventArgs e)
         {
-            serialPort.WriteLine(GetRoute());
+            try
+            {
+                //serialPort.WriteLine(GetRoute());
+            }
+            catch
+            {
+
+            }
             MessageBox.Show(GetRoute());
         }
 
