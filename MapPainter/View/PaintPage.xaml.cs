@@ -31,8 +31,7 @@ namespace MapPainter.View
         public PaintPage(string portName)
         {
             InitializeComponent();
-            inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(CanvasMouseDown), true);
-
+            inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(InkCanvasMouseDown), true);
 
                 serialPort = new(portName);
                 serialPort.BaudRate = 9600;
@@ -44,7 +43,7 @@ namespace MapPainter.View
                 serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
         }
 
-        private void CanvasMouseDown(object sender, MouseButtonEventArgs e)
+        private void InkCanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!isFirstPointCreated)
             {
@@ -176,7 +175,7 @@ namespace MapPainter.View
         {
             string route = string.Empty;
             for (int i = 0; i < lengths.Count; ++i)
-                route += $"{angles[i]} {lengths[i]}\n";
+                route += $"{angles[i]} {lengths[i] * (int.Parse(scaleTextBox.Text) / 100)}\n";
             return route;
         }
 
@@ -192,6 +191,11 @@ namespace MapPainter.View
             //    Canvas.SetLeft(robot, points[int.Parse(lines[1])].X);
             //    Canvas.SetTop(robot, points[int.Parse(lines[1])].Y);
             //}
+        }
+
+        private void ScaleTextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
     }
 }

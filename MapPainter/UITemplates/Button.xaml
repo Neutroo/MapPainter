@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--Button template-->
     <ControlTemplate x:Key="ButtonBaseControlTemplate" TargetType="{x:Type ButtonBase}">
-        <Border x:Name="Border"
+        <Border x:Name="border"
                 CornerRadius="13"                
                 SnapsToDevicePixels="True"
                 Background="#FF6A6ACC">
@@ -16,7 +16,7 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" TargetName="Border" Value="White"/>
+                <Setter Property="Background" TargetName="border" Value="White"/>
                 <Setter Property="Foreground" Value="#FF6A6ACC"/>
                 <Setter Property="Cursor" Value="Hand"/>
             </Trigger>
