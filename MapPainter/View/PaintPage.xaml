@@ -26,10 +26,12 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
         <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
-            <Setter Property="Background" Value="#FF6A6ACC"/>
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
@@ -39,19 +41,28 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Border x:Name="border"
-                                CornerRadius="13"
-                                Background="{TemplateBinding Background}" 
-                                SnapsToDevicePixels="True">
+                        <Border x:Name="border" Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
                             <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="Cursor" Value="IBeam"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="Black"/>
-                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
             </Style.Triggers>
         </Style>
     </Page.Resources>
@@ -139,7 +150,9 @@
               Height="30" 
               Margin="934,638,230,27" 
               Grid.Row="1">
-            <TextBox Style="{DynamicResource TextBoxStyle}" 
+            <Border CornerRadius="13" Background="#FF6A6ACC" BorderThickness="0"/>
+            <TextBox Background="Transparent"
+                     BorderThickness="0"
                      HorizontalAlignment="Left" 
                      TextWrapping="NoWrap" 
                      Text=" Scale:               %" 
@@ -149,17 +162,17 @@
                      Foreground="White"
                      FontSize="14" IsReadOnly="True">
             </TextBox>
-            <TextBox x:Name="scaleTextBox" 
+            <TextBox Style="{DynamicResource TextBoxStyle}" 
+                     x:Name="scaleTextBox" 
                      Text="100" 
                      Foreground="White" 
-                     BorderThickness="0"
-                     HorizontalContentAlignment="Right"
-                     Margin="0,0,16,0"
                      VerticalContentAlignment="Center"
-                     Background="{x:Null}"
-                     BorderBrush="{x:Null}"
-                     SelectionBrush="{x:Null}"
-                     SelectionTextBrush="{x:Null}" FontSize="14" PreviewTextInput="ScaleTextBoxPreviewTextInput"/>
+                     HorizontalContentAlignment="Right"
+                     FontSize="14" 
+                     PreviewTextInput="ScaleTextBoxPreviewTextInput" 
+                     GotFocus="ScaleTextBoxGotFocus" 
+                     Padding="0,0,16,0">
+            </TextBox>
         </Grid>
     </Grid>
 </Page>

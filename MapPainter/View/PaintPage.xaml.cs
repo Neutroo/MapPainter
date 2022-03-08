@@ -175,7 +175,7 @@ namespace MapPainter.View
         {
             string route = string.Empty;
             for (int i = 0; i < lengths.Count; ++i)
-                route += $"{angles[i]} {lengths[i] * (int.Parse(scaleTextBox.Text) / 100)}\n";
+                route += $"{angles[i]} {Math.Round(lengths[i] * (double.Parse(scaleTextBox.Text) / 100))}\n";
             return route;
         }
 
@@ -197,5 +197,8 @@ namespace MapPainter.View
         {
             if (!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
+
+        private void ScaleTextBoxGotFocus(object sender, RoutedEventArgs e) 
+            => scaleTextBox.Text = string.Empty;
     }
 }
