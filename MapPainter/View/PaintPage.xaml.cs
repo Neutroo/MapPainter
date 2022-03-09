@@ -40,7 +40,7 @@ namespace MapPainter.View
                 else
                     throw new Exception("port already open");
 
-                serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
+                //serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
         }
 
         private void InkCanvasMouseDown(object sender, MouseButtonEventArgs e)
@@ -175,7 +175,7 @@ namespace MapPainter.View
         {
             string route = string.Empty;
             for (int i = 0; i < lengths.Count; ++i)
-                route += $"{angles[i]} {Math.Round(lengths[i] * (double.Parse(scaleTextBox.Text) / 100))}\n";
+                route += $"{angles[i]} {Math.Round(lengths[i] * (double.Parse(scaleTextBox.Text) / 100))};";
             return route;
         }
 
