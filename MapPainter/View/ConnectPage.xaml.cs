@@ -24,8 +24,9 @@ namespace MapPainter.View
 
             string[] ports = SerialPort.GetPortNames();
             
-            foreach (string port in ports)
-                comboBoxPorts.Items.Add(port);
+            if (ports != null)
+                foreach (string port in ports)
+                    comboBoxPorts.Items.Add(port);
 
             comboBoxPorts.SelectedIndex = 0;
         }
@@ -39,8 +40,6 @@ namespace MapPainter.View
         }
 
         private void ButtonConnect(object sender, RoutedEventArgs e)
-        {
-            Application.Current.MainWindow.Content = new PaintPage(comboBoxPorts.Text);
-        }
+            => Application.Current.MainWindow.Content = new PaintPage(comboBoxPorts.Text);        
     }
 }
