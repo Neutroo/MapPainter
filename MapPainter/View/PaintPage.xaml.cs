@@ -195,20 +195,20 @@ namespace MapPainter.View
         public void StartRobotAnimation()
         {
             // Create a NameScope for the page so that
-            // we can use Storyboards.
+            // we can use Storyboards
             NameScope.SetNameScope(this, new NameScope());
 
             // Create a transform. This transform
-            // will be used to move the robot image.
+            // will be used to move the robot image
             TranslateTransform animatedTranslateTransform = new();
 
             // Register the transform's name with the page
-            // so that they it be targeted by a Storyboard.
+            // so that they it be targeted by a Storyboard
             RegisterName("AnimatedTranslateTransform", animatedTranslateTransform);
 
             robot.RenderTransform = animatedTranslateTransform;
 
-            // Create the animation path.
+            // Create the animation path
             PathGeometry animationPath = new();
             PathFigure pathFigure = new();
             PolyLineSegment polyLineSegment = new();
@@ -219,7 +219,7 @@ namespace MapPainter.View
             pathFigure.Segments.Add(polyLineSegment);
             animationPath.Figures.Add(pathFigure);
 
-            // Freeze the PathGeometry for performance benefits.
+            // Freeze the PathGeometry for performance benefits
             animationPath.Freeze();
 
             DoubleAnimationUsingPath translateXAnimation = new();
@@ -241,12 +241,12 @@ namespace MapPainter.View
             translateYAnimation.Source = PathAnimationSource.Y;
 
             // Set the animation to target the Y property
-            // of the TranslateTransform named "AnimatedTranslateTransform".
+            // of the TranslateTransform named "AnimatedTranslateTransform"
             Storyboard.SetTargetName(translateYAnimation, "AnimatedTranslateTransform");
             Storyboard.SetTargetProperty(translateYAnimation,
                 new PropertyPath(TranslateTransform.YProperty));
 
-            // Create a Storyboard to contain and apply the animations.
+            // Create a Storyboard to contain and apply the animations
             Storyboard pathAnimationStoryboard = new();
             pathAnimationStoryboard.Children.Add(translateXAnimation);
             pathAnimationStoryboard.Children.Add(translateYAnimation);
@@ -257,6 +257,11 @@ namespace MapPainter.View
                 launchButton.IsEnabled = true;
                 scaleTextBox.IsEnabled = true;
                 inkCanvas.IsEnabled = true;
+
+                inkCanvas.Strokes.Clear();
+                angles.Clear();
+                lengths.Clear();
+                points.Clear();
             };
 
             menuButton.IsEnabled = false;
