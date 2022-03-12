@@ -41,7 +41,8 @@
                             BorderThickness="0" 
                             Click="ButtonClose" 
                             Foreground="#FF6A6ACC"
-                            Style="{DynamicResource ExitButtonStyle}"/>
+                            Style="{DynamicResource ExitButtonStyle}"
+                            IsTabStop="False"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -67,7 +68,8 @@
                       Height="30" 
                       FontSize="14"
                       HorizontalContentAlignment="Center"
-                      VerticalContentAlignment="Center">
+                      VerticalContentAlignment="Center"
+                      IsTabStop="False">
                 <ComboBox.Style>
                     <Style TargetType="ComboBox">
                         <Setter Property="Foreground" Value="White"/>
@@ -83,7 +85,8 @@
                     Height="30" 
                     Template="{DynamicResource ButtonBaseControlTemplate}" 
                     FontSize="14" 
-                    Click="ButtonConnect">
+                    Click="ButtonConnect"
+                    IsTabStop="False">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Foreground" Value="White"/>

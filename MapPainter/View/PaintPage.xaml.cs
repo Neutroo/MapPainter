@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.IO;
-using System.IO.Ports;
 using System.Windows.Media.Animation;
 
 namespace MapPainter.View
@@ -25,7 +18,6 @@ namespace MapPainter.View
         private List<double> lengths = new();
         private List<Point> points = new();
         private StylusPoint firstPoint;
-        private bool isFirstPointCreated;
         private double firstAngle;
 
         public PaintPage(string portName)
@@ -43,15 +35,14 @@ namespace MapPainter.View
 
         private void InkCanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!isFirstPointCreated)
+            if (robot.Visibility == Visibility.Hidden)
             {
                 firstPoint = new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
-                
+
                 // Set position for image where we clicked
-                Canvas.SetLeft(robot, e.GetPosition(this).X - robot.Width / 2);    
+                Canvas.SetLeft(robot, e.GetPosition(this).X - robot.Width / 2);
                 Canvas.SetTop(robot, e.GetPosition(this).Y - robot.Height / 2);
-                
-                isFirstPointCreated = true;
+
                 robot.Visibility = Visibility.Visible;
 
                 points.Add(new Point(firstPoint.X, firstPoint.Y));
@@ -62,7 +53,7 @@ namespace MapPainter.View
                     firstPoint = s.StylusPoints[^1];
 
                 StylusPoint secondPoint = new(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
-                Stroke stroke = new (new StylusPointCollection()
+                Stroke stroke = new(new StylusPointCollection()
                 {
                     firstPoint,
                     secondPoint,
@@ -72,10 +63,10 @@ namespace MapPainter.View
 
                 stroke.DrawingAttributes.Color = Colors.AliceBlue;
 
-                if((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)) != 0)
+                if ((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)) != 0)
                 {
                     if (angles.Count == 0)
-                    {                       
+                    {
                         lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
 
                         if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
@@ -83,7 +74,7 @@ namespace MapPainter.View
                         else
                             firstAngle = (int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
                         angles.Add(0);
-                        
+
                         inkCanvas.Strokes.Add(stroke);
                     }
                     else
@@ -96,12 +87,12 @@ namespace MapPainter.View
                             angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
                         inkCanvas.Strokes.Add(stroke);
                     }
-                }                    
+                }
             }
         }
 
         private void ButtonClose(object sender, RoutedEventArgs e)
-        { 
+        {
             serialPort.Close();
             Application.Current.Shutdown();
         }
@@ -129,12 +120,8 @@ namespace MapPainter.View
             }
         }
 
-        private bool isMoving;
-        
         private void RobotMouseDown(object sender, MouseButtonEventArgs e)
         {
-            isMoving = true;
-
             inkCanvas.Strokes.Clear();
             angles.Clear();
             lengths.Clear();
@@ -144,10 +131,8 @@ namespace MapPainter.View
 
         private void RobotMouseUp(object sender, MouseButtonEventArgs e)
         {
-            isMoving = false;
-            
             robot.ReleaseMouseCapture();
-            
+
             double sX, sY;
             sX = e.GetPosition(inkCanvas).X;
             sY = e.GetPosition(inkCanvas).Y;
@@ -161,13 +146,14 @@ namespace MapPainter.View
                 sY = 0;
             else if (e.GetPosition(this).Y - robot.Height / 2 > 575)
                 sY = 555;
-
+           
             firstPoint = new StylusPoint(sX, sY);
+            points.Add(new Point(firstPoint.X, firstPoint.Y));
         }
 
         private void RobotMouseMove(object sender, MouseEventArgs e)
         {
-            if (isMoving)
+            if (robot.IsMouseCaptured)
             {
                 if (e.GetPosition(this).X - robot.Width / 2 > 20 && e.GetPosition(this).X - robot.Width / 2 < 1200)
                     Canvas.SetLeft(robot, e.GetPosition(this).X - robot.Width / 2);
@@ -189,7 +175,7 @@ namespace MapPainter.View
             if (!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
-        private void ScaleTextBoxGotFocus(object sender, RoutedEventArgs e) 
+        private void ScaleTextBoxGotFocus(object sender, RoutedEventArgs e)
             => scaleTextBox.Text = string.Empty;
 
         public void StartRobotAnimation()
@@ -224,7 +210,7 @@ namespace MapPainter.View
 
             DoubleAnimationUsingPath translateXAnimation = new();
             translateXAnimation.PathGeometry = animationPath;
-            translateXAnimation.Duration = 
+            translateXAnimation.Duration =
                 TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 500);
 
             translateXAnimation.Source = PathAnimationSource.X;
@@ -235,13 +221,11 @@ namespace MapPainter.View
 
             DoubleAnimationUsingPath translateYAnimation = new();
             translateYAnimation.PathGeometry = animationPath;
-            translateYAnimation.Duration = 
+            translateYAnimation.Duration =
                 TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 500);
 
             translateYAnimation.Source = PathAnimationSource.Y;
 
-            // Set the animation to target the Y property
-            // of the TranslateTransform named "AnimatedTranslateTransform"
             Storyboard.SetTargetName(translateYAnimation, "AnimatedTranslateTransform");
             Storyboard.SetTargetProperty(translateYAnimation,
                 new PropertyPath(TranslateTransform.YProperty));
@@ -257,17 +241,27 @@ namespace MapPainter.View
                 launchButton.IsEnabled = true;
                 scaleTextBox.IsEnabled = true;
                 inkCanvas.IsEnabled = true;
+                robot.IsEnabled = true;
 
                 inkCanvas.Strokes.Clear();
                 angles.Clear();
                 lengths.Clear();
+                
+                Canvas.SetLeft(robot, points.Last().X + 20.9);
+                Canvas.SetTop(robot, points.Last().Y + 47);
+                
+                robot.RenderTransform = new TranslateTransform(0, 0);   // Reset RenderTransform
+                
+                firstPoint = new StylusPoint(points.Last().X, points.Last().Y);
                 points.Clear();
+                points.Add(new Point(firstPoint.X, firstPoint.Y));
             };
 
             menuButton.IsEnabled = false;
             launchButton.IsEnabled = false;
             scaleTextBox.IsEnabled = false;
             inkCanvas.IsEnabled = false;
+            robot.IsEnabled = false;
 
             pathAnimationStoryboard.Begin(this);
         }

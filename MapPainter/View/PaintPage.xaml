@@ -85,19 +85,21 @@
                             BorderThickness="0" 
                             Click="ButtonClose" 
                             Foreground="#FF6A6ACC"
-                            Style="{DynamicResource ExitButtonStyle}"/>
+                            Style="{DynamicResource ExitButtonStyle}"
+                            IsTabStop="False"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <Grid Margin="42,42,42,86" 
-               Grid.Row="1">
+              Grid.Row="1">
             <Border BorderBrush="#FF6A6ACC" CornerRadius="13" BorderThickness="2"/>
             <InkCanvas Style="{DynamicResource InkCanvasStyle}" x:Name="inkCanvas" 
                        Background="Transparent" 
                        EditingMode="None" 
                        UseCustomCursor="True" 
-                       Margin="5,6,5,6"/>
+                       Margin="5,6,5,6">
+            </InkCanvas>
         </Grid>
 
         <Button x:Name="launchButton" 
@@ -108,7 +110,8 @@
                 Template="{DynamicResource ButtonBaseControlTemplate}" 
                 FontSize="14" 
                 Margin="1092,637,42,28" 
-                Click="LaunchButtonClick">
+                Click="LaunchButtonClick"
+                IsTabStop="False">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Foreground" Value="White"/>
@@ -124,7 +127,8 @@
                 Template="{DynamicResource ButtonBaseControlTemplate}" 
                 FontSize="14" 
                 Margin="42,637,1092,28" 
-                Click="MenuButtonClick">
+                Click="MenuButtonClick"
+                IsTabStop="False">
             <Button.Style>
                 <Style TargetType="Button">
                     <Setter Property="Foreground" Value="White"/>
@@ -141,16 +145,13 @@
                    MouseMove ="RobotMouseMove" 
                    Source="/Images/robot.png" 
                    MouseDown="RobotMouseDown" 
-                   Canvas.Left="562" 
-                   Canvas.Top="306" 
                    Visibility="Hidden"/>
         </Canvas>
-
+        
         <Grid Width="116"
               Height="30" 
               Margin="934,638,230,27" 
-              Grid.Row="1"
-              x:Name="scaleGrid">
+              Grid.Row="1">
             <Border CornerRadius="13" Background="#FF6A6ACC" BorderThickness="0"/>
             <TextBox Background="Transparent"
                      BorderThickness="0"
@@ -161,7 +162,8 @@
                      HorizontalContentAlignment="Left"
                      VerticalContentAlignment="Center"
                      Foreground="White"
-                     FontSize="14" IsReadOnly="True">
+                     FontSize="14" 
+                     IsReadOnly="True">
             </TextBox>
             <TextBox Style="{DynamicResource TextBoxStyle}" 
                      x:Name="scaleTextBox" 
@@ -172,7 +174,8 @@
                      FontSize="14" 
                      PreviewTextInput="ScaleTextBoxPreviewTextInput" 
                      GotFocus="ScaleTextBoxGotFocus" 
-                     Padding="0,0,16,0">
+                     Padding="0,0,16,0"
+                     IsTabStop="False">
             </TextBox>
         </Grid>
     </Grid>
