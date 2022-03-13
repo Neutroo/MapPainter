@@ -111,8 +111,8 @@ namespace MapPainter.View
 
         private void LaunchButtonClick(object sender, RoutedEventArgs e)
         {
-            // If we dont have at least 1 line yet
-            if (points.Count > 1)
+            // If we have at least 1 line yet and scaleBox not empty
+            if (points.Count > 1 && scaleTextBox.Text != string.Empty)
             {
                 serialPort.WriteLine(GetRoute());
                 MessageBox.Show(GetRoute());

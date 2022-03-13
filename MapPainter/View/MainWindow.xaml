@@ -10,5 +10,5 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
 
-    <Frame x:Name="MainFrame" Height="720" IsTabStop="False"/>
+    <Frame x:Name="MainFrame" IsTabStop="False"/>
 </Window>
