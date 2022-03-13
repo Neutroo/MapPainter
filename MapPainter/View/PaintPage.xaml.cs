@@ -19,13 +19,16 @@ namespace MapPainter.View
         private List<Point> points = new();
         private StylusPoint firstPoint;
         private double firstAngle;
-        private bool restart = false;
+        private bool isRestarted;
+
         public PaintPage(string portName)
         {
             InitializeComponent();
+
             inkCanvas.AddHandler(MouseDownEvent, new MouseButtonEventHandler(InkCanvasMouseDown), true);
-            serialPort = new(portName);
-            serialPort.BaudRate = 9600;
+
+            serialPort = new(portName) { BaudRate = 9600 };
+            
             if (!serialPort.IsOpen)
                 serialPort.Open();
             else
@@ -52,6 +55,7 @@ namespace MapPainter.View
                     firstPoint = s.StylusPoints[^1];
 
                 StylusPoint secondPoint = new(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
+
                 Stroke stroke = new(new StylusPointCollection()
                 {
                     firstPoint,
@@ -62,35 +66,32 @@ namespace MapPainter.View
 
                 stroke.DrawingAttributes.Color = Colors.AliceBlue;
 
-                if ((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)) != 0)
-                {
-                    if (angles.Count == 0  && !restart)
-                    {
-                        lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
+                lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
 
-                        if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                            firstAngle = (int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
-                        else
-                            firstAngle = (int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
-
-                        angles.Add(0);
-                        inkCanvas.Strokes.Add(stroke);
-                    }
+                if (angles.Count == 0 && !isRestarted)
+                {                   
+                    if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
+                        firstAngle = (int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
                     else
-                    {
-                        lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
+                        firstAngle = (int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
 
-                        if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                            angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
-                        else
-                            angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
-                        while (angles[angles.Count-1] > 180)
-                            angles[angles.Count-1] -= 360;
-                        while(angles[angles.Count-1] < -180) 
-                            angles[angles.Count-1] += 360;
-                        inkCanvas.Strokes.Add(stroke);
-                    }
+                    angles.Add(0);
                 }
+                else
+                {
+                    if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
+                        angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
+                    else
+                        angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
+
+                    while (angles.Last() > 180)
+                        angles[angles.Count - 1] -= 360;
+
+                    while(angles.Last() < -180) 
+                        angles[angles.Count - 1] += 360;
+                }
+
+                inkCanvas.Strokes.Add(stroke);
             }
         }
 
@@ -109,7 +110,6 @@ namespace MapPainter.View
         private void MenuButtonClick(object sender, RoutedEventArgs e)
         {
             serialPort.Close();
-            restart = false;
             Application.Current.MainWindow.Content = new ConnectPage();
         }
 
@@ -119,9 +119,8 @@ namespace MapPainter.View
             if (points.Count > 1 && scaleTextBox.Text != string.Empty)
             {
                 serialPort.WriteLine(GetRoute());
-                MessageBox.Show(GetRoute());
                 StartRobotAnimation();
-                restart = true;
+                isRestarted = true;
             }
         }
 
@@ -177,7 +176,8 @@ namespace MapPainter.View
 
         private void ScaleTextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (!char.IsDigit(e.Text, 0)) e.Handled = true;
+            if (!char.IsDigit(e.Text, 0)) 
+                e.Handled = true;
         }
 
         private void ScaleTextBoxGotFocus(object sender, RoutedEventArgs e)
