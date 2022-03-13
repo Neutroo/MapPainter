@@ -157,7 +157,7 @@ namespace MapPainter.View
             {
                 if (e.GetPosition(this).X - robot.Width / 2 > 20 && e.GetPosition(this).X - robot.Width / 2 < 1200)
                     Canvas.SetLeft(robot, e.GetPosition(this).X - robot.Width / 2);
-                if (e.GetPosition(this).Y - robot.Height / 2 > 40 && e.GetPosition(this).Y - robot.Height / 2 < 585)
+                if (e.GetPosition(this).Y - robot.Height / 2 > 40 && e.GetPosition(this).Y - robot.Height / 2 < 595)
                     Canvas.SetTop(robot, e.GetPosition(this).Y - robot.Height / 2);
             }
         }
@@ -243,6 +243,10 @@ namespace MapPainter.View
                 inkCanvas.IsEnabled = true;
                 robot.IsEnabled = true;
 
+                menuButton.Opacity = 1;
+                launchButton.Opacity = 1;
+                scaleGrid.Opacity = 1;
+
                 inkCanvas.Strokes.Clear();
                 angles.Clear();
                 lengths.Clear();
@@ -262,6 +266,10 @@ namespace MapPainter.View
             scaleTextBox.IsEnabled = false;
             inkCanvas.IsEnabled = false;
             robot.IsEnabled = false;
+
+            menuButton.Opacity = 0.7;
+            launchButton.Opacity = 0.7;
+            scaleGrid.Opacity = 0.7;
 
             pathAnimationStoryboard.Begin(this);
         }

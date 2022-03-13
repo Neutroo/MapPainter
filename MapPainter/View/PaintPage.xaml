@@ -148,7 +148,8 @@
                    Visibility="Hidden"/>
         </Canvas>
         
-        <Grid Width="116"
+        <Grid x:Name="scaleGrid"
+              Width="116"
               Height="30" 
               Margin="934,638,230,27" 
               Grid.Row="1">
