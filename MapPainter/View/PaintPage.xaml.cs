@@ -50,7 +50,6 @@ namespace MapPainter.View
                 // Unhiding the robot's image
                 robot.Visibility = Visibility.Visible;
 
-                // Adding a position to an array of all points
                 points.Add(new Point(firstPoint.X, firstPoint.Y));
             }
             else
@@ -62,19 +61,17 @@ namespace MapPainter.View
                 // Initializing new point at the click position
                 StylusPoint secondPoint = new(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
 
-                // Initializing a new segment of the robot's way
                 Stroke stroke = new(new StylusPointCollection()
                 {
                     firstPoint,
                     secondPoint,
                 });
 
-                // Adding a position to an array of all points
                 points.Add(new Point(secondPoint.X, secondPoint.Y));
 
                 stroke.DrawingAttributes.Color = Colors.AliceBlue;
 
-                // Calculating the length of a new segment
+                // Calculating the length of a new line
                 // by the Pythagorean theorem
                 lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
 
@@ -115,7 +112,7 @@ namespace MapPainter.View
                     angles.Add(angle);
                 }
 
-                // Adding a new segment
+                // Adding a new line
                 inkCanvas.Strokes.Add(stroke);
             }
         }
