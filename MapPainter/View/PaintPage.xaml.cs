@@ -37,64 +37,85 @@ namespace MapPainter.View
 
         private void InkCanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
+
             if (robot.Visibility == Visibility.Hidden)
             {
+                // Initializing the first point of robot's way
                 firstPoint = new StylusPoint(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
 
                 // Set position for image where we clicked
                 Canvas.SetLeft(robot, e.GetPosition(this).X - robot.Width / 2);
                 Canvas.SetTop(robot, e.GetPosition(this).Y - robot.Height / 2);
 
+                // Unhiding the robot's image
                 robot.Visibility = Visibility.Visible;
 
+                // Adding a position to an array of all points
                 points.Add(new Point(firstPoint.X, firstPoint.Y));
             }
             else
             {
+                // Finding the last point of the current way
                 foreach (Stroke s in inkCanvas.Strokes)
                     firstPoint = s.StylusPoints[^1];
 
+                // Initializing new point at the click position
                 StylusPoint secondPoint = new(e.GetPosition(inkCanvas).X, e.GetPosition(inkCanvas).Y);
 
+                // Initializing a new segment of the robot's way
                 Stroke stroke = new(new StylusPointCollection()
                 {
                     firstPoint,
                     secondPoint,
                 });
 
+                // Adding a position to an array of all points
                 points.Add(new Point(secondPoint.X, secondPoint.Y));
 
                 stroke.DrawingAttributes.Color = Colors.AliceBlue;
 
+                // Calculating the length of a new segment
+                // by the Pythagorean theorem
                 lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
 
                 if (angles.Count == 0 && !isRestarted)
                 {
+                    // Finding the angle in 1 and 4 quarters
+                    // using the ArcTan, assuming that the Y axis is directed downward, and the X is to the right
                     firstAngle = (int)(180 / Math.PI * Math.Atan((-firstPoint.Y + e.GetPosition(inkCanvas).Y) / (e.GetPosition(inkCanvas).X - firstPoint.X)));
 
+                    // Checking for finding the angle in 2 and 3 quarters
                     if (e.GetPosition(inkCanvas).X < firstPoint.X)                   
                         firstAngle = (firstAngle > 0) ? 180 - firstAngle : firstAngle = -180 + firstAngle;
                     
+                    // Adding first angle as 0
                     angles.Add(0);
                 }
                 else
                 {
+                    // Finding the angle in 1 and 4 quarters
+                    // using the ArcTan, assuming that the Y axis is directed downward, and the X is to the right
                     int angle = (int)(180 / Math.PI * Math.Atan((-firstPoint.Y + e.GetPosition(inkCanvas).Y) / (e.GetPosition(inkCanvas).X - firstPoint.X)));
-                    
+
+                    // Checking for finding the angle in 2 and 3 quarters
                     if (e.GetPosition(inkCanvas).X < firstPoint.X)
                         angle = (angle > 0) ? 180 - angle : -180 + angle;
-                    
+
+                    // Compensating for the rotation of the coordinate system by the first angle
                     angle -= firstAngle;
 
+                    // Checking and compensation of angle deviation from the interval [-180;180]
                     while (angle > 180)
                         angle -= 360;
 
                     while (angle < -180)
                         angle += 360;
 
+                    // Adding new angle
                     angles.Add(angle);
                 }
 
+                // Adding a new segment
                 inkCanvas.Strokes.Add(stroke);
             }
         }
