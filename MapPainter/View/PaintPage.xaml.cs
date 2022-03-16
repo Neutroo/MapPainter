@@ -14,11 +14,11 @@ namespace MapPainter.View
     public partial class PaintPage : Page
     {
         private SerialPort serialPort;
-        private List<double> angles = new();
-        private List<double> lengths = new();
+        private List<int> angles = new();
+        private List<int> lengths = new();
         private List<Point> points = new();
         private StylusPoint firstPoint;
-        private double firstAngle;
+        private int firstAngle;
         private bool isRestarted;
 
         public PaintPage(string portName)
@@ -69,26 +69,30 @@ namespace MapPainter.View
                 lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
 
                 if (angles.Count == 0 && !isRestarted)
-                {                   
-                    if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                        firstAngle = (int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
-                    else
-                        firstAngle = (int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y)));
+                {
+                    firstAngle = (int)(180 / Math.PI * Math.Atan((-firstPoint.Y + e.GetPosition(inkCanvas).Y) / (e.GetPosition(inkCanvas).X - firstPoint.X)));
 
+                    if (e.GetPosition(inkCanvas).X < firstPoint.X)                   
+                        firstAngle = (firstAngle > 0) ? 180 - firstAngle : firstAngle = -180 + firstAngle;
+                    
                     angles.Add(0);
                 }
                 else
                 {
-                    if (e.GetPosition(inkCanvas).Y <= firstPoint.Y)
-                        angles.Add((int)(90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
-                    else
-                        angles.Add((int)(-90 + 180 / Math.PI * Math.Atan((e.GetPosition(inkCanvas).X - firstPoint.X) / (e.GetPosition(inkCanvas).Y - firstPoint.Y))) - firstAngle);
+                    int angle = (int)(180 / Math.PI * Math.Atan((-firstPoint.Y + e.GetPosition(inkCanvas).Y) / (e.GetPosition(inkCanvas).X - firstPoint.X)));
+                    
+                    if (e.GetPosition(inkCanvas).X < firstPoint.X)
+                        angle = (angle > 0) ? 180 - angle : -180 + angle;
+                    
+                    angle -= firstAngle;
 
-                    while (angles.Last() > 180)
-                        angles[angles.Count - 1] -= 360;
+                    while (angle > 180)
+                        angle -= 360;
 
-                    while(angles.Last() < -180) 
-                        angles[angles.Count - 1] += 360;
+                    while (angle < -180)
+                        angle += 360;
+
+                    angles.Add(angle);
                 }
 
                 inkCanvas.Strokes.Add(stroke);
