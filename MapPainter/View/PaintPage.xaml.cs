@@ -19,6 +19,8 @@ namespace MapPainter.View
         private List<Point> points = new();
         private StylusPoint firstPoint;
         private int firstAngle;
+        private int lastAngle;
+        private int sigma;
         private bool isRestarted;
 
         public PaintPage(string portName)
@@ -75,18 +77,52 @@ namespace MapPainter.View
                 // by the Pythagorean theorem
                 lengths.Add((int)Math.Sqrt(Math.Pow(e.GetPosition(inkCanvas).X - firstPoint.X, 2) + Math.Pow(e.GetPosition(inkCanvas).Y - firstPoint.Y, 2)));
 
-                if (angles.Count == 0 && !isRestarted)
+                if (inkCanvas.Strokes.Count == 0 && !isRestarted)
                 {
                     // Finding the angle in 1 and 4 quarters
                     // using the ArcTan, assuming that the Y axis is directed downward, and the X is to the right
                     firstAngle = (int)(180 / Math.PI * Math.Atan((-firstPoint.Y + e.GetPosition(inkCanvas).Y) / (e.GetPosition(inkCanvas).X - firstPoint.X)));
 
                     // Checking for finding the angle in 2 and 3 quarters
-                    if (e.GetPosition(inkCanvas).X < firstPoint.X)                   
-                        firstAngle = (firstAngle > 0) ? 180 - firstAngle : firstAngle = -180 + firstAngle;
+                    if (e.GetPosition(inkCanvas).X < firstPoint.X)
+                        firstAngle = (firstAngle > 0) ? -180 + firstAngle : 180 + firstAngle;
+
+                    angles.Add(0);                    
+                }
+                else if (inkCanvas.Strokes.Count > 0)
+                {
+                    // Finding the angle in 1 and 4 quarters
+                    // using the ArcTan, assuming that the Y axis is directed downward, and the X is to the right
+                    int angle = (int)(180 / Math.PI * Math.Atan((-firstPoint.Y + e.GetPosition(inkCanvas).Y) / (e.GetPosition(inkCanvas).X - firstPoint.X)));
+
+                    // Checking for finding the angle in 2 and 3 quarters
+                    if (e.GetPosition(inkCanvas).X < firstPoint.X)
+                        angle = (angle > 0) ? -180 + angle : 180 + angle;
                     
-                    // Adding first angle as 0
-                    angles.Add(0);
+                    // Compensating for the rotation of the coordinate system by the first angle
+                    angle -= firstAngle;
+
+                    angle -= sigma;            
+                        
+                    // Checking and compensation of angle deviation from the interval [-180;180]
+                    if (angle > 180)
+                        angle -= 360;
+
+                    if (angle < -180)
+                        angle += 360;
+                    
+                    //if (isRestarted)
+                    //{
+                    //    if (angle * lastAngle < 0)
+                    //        angle = Math.Abs(angle) + Math.Abs(lastAngle);
+                    //    else if (Math.Abs(lastAngle) < Math.Abs(angle))
+                    //        angle = angle - lastAngle;
+                    //    else
+                    //        angle = lastAngle - angle;
+                    //}
+
+
+                    angles.Add(angle);
                 }
                 else
                 {
@@ -96,22 +132,29 @@ namespace MapPainter.View
 
                     // Checking for finding the angle in 2 and 3 quarters
                     if (e.GetPosition(inkCanvas).X < firstPoint.X)
-                        angle = (angle > 0) ? 180 - angle : -180 + angle;
+                        angle = (angle > 0) ? -180 + angle : 180 + angle;
 
                     // Compensating for the rotation of the coordinate system by the first angle
+
                     angle -= firstAngle;
 
+                    if (isRestarted)
+                    {
+                        if (angle * lastAngle < 0)
+                            sigma = Math.Abs(angle) + Math.Abs(lastAngle);
+                        else if (Math.Abs(lastAngle) < Math.Abs(angle))
+                            sigma = angle - lastAngle;
+                        else
+                            sigma = lastAngle - angle;
+                    }
+                   
                     // Checking and compensation of angle deviation from the interval [-180;180]
-                    while (angle > 180)
-                        angle -= 360;
+                    if (sigma > 180)
+                        sigma -= 360;
 
-                    while (angle < -180)
-                        angle += 360;
-
-                    // Adding new angle
-                    angles.Add(angle);
+                    if (sigma < -180)
+                        sigma += 360;
                 }
-
                 // Adding a new line
                 inkCanvas.Strokes.Add(stroke);
             }
@@ -140,8 +183,9 @@ namespace MapPainter.View
             // If we have at least 1 line yet and scaleBox not empty
             if (points.Count > 1 && scaleTextBox.Text != string.Empty)
             {
-                serialPort.WriteLine(GetRoute());
+                //serialPort.WriteLine(GetRoute());
                 StartRobotAnimation();
+                MessageBox.Show(GetRoute());
                 isRestarted = true;
             }
         }
@@ -175,6 +219,9 @@ namespace MapPainter.View
            
             firstPoint = new StylusPoint(sX, sY);
             points.Add(new Point(firstPoint.X, firstPoint.Y));
+
+            if (isRestarted)
+                angles.Add(lastAngle);
         }
 
         private void RobotMouseMove(object sender, MouseEventArgs e)
@@ -238,7 +285,7 @@ namespace MapPainter.View
             DoubleAnimationUsingPath translateXAnimation = new();
             translateXAnimation.PathGeometry = animationPath;
             translateXAnimation.Duration =
-                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 500);
+                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 1000);
 
             translateXAnimation.Source = PathAnimationSource.X;
 
@@ -249,7 +296,7 @@ namespace MapPainter.View
             DoubleAnimationUsingPath translateYAnimation = new();
             translateYAnimation.PathGeometry = animationPath;
             translateYAnimation.Duration =
-                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 500);
+                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 1000);
 
             translateYAnimation.Source = PathAnimationSource.Y;
 
@@ -275,7 +322,9 @@ namespace MapPainter.View
                 scaleGrid.Opacity = 1;
 
                 inkCanvas.Strokes.Clear();
+                lastAngle = angles.Last();
                 angles.Clear();
+                angles.Add(lastAngle);
                 lengths.Clear();
                 
                 Canvas.SetLeft(robot, points.Last().X + 20.9);
