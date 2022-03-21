@@ -103,9 +103,11 @@ namespace MapPainter.View
                     // Compensating for the rotation of the coordinate system by the first angle
                     angle -= firstAngle;
 
-                    // Checking and compensation of angle deviation from the interval [-180;180]
+                    // Compensating angle in restart
                     angle += lastAngle;
 
+
+                    // Checking and compensation of angle deviation from the interval [-180;180]
                     if (angle > 180)
                         angle -= 360;
 
