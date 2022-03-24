@@ -106,7 +106,6 @@ namespace MapPainter.View
                     // Compensating angle in restart
                     angle += lastAngle;
 
-
                     // Checking and compensation of angle deviation from the interval [-180;180]
                     if (angle > 180)
                         angle -= 360;
@@ -114,7 +113,6 @@ namespace MapPainter.View
                     if (angle < -180)
                         angle += 360;
 
-                    // Adding new angle
                     angles.Add(angle);
                 }
 
@@ -247,7 +245,7 @@ namespace MapPainter.View
             DoubleAnimationUsingPath translateXAnimation = new();
             translateXAnimation.PathGeometry = animationPath;
             translateXAnimation.Duration =
-                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 500);
+                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 1000);
 
             translateXAnimation.Source = PathAnimationSource.X;
 
@@ -258,7 +256,7 @@ namespace MapPainter.View
             DoubleAnimationUsingPath translateYAnimation = new();
             translateYAnimation.PathGeometry = animationPath;
             translateYAnimation.Duration =
-                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 500);
+                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 1000);
 
             translateYAnimation.Source = PathAnimationSource.Y;
 
