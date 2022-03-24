@@ -245,7 +245,7 @@ namespace MapPainter.View
             DoubleAnimationUsingPath translateXAnimation = new();
             translateXAnimation.PathGeometry = animationPath;
             translateXAnimation.Duration =
-                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 1000);
+                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 700);
 
             translateXAnimation.Source = PathAnimationSource.X;
 
@@ -256,7 +256,7 @@ namespace MapPainter.View
             DoubleAnimationUsingPath translateYAnimation = new();
             translateYAnimation.PathGeometry = animationPath;
             translateYAnimation.Duration =
-                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 1000);
+                TimeSpan.FromMilliseconds((lengths.Sum() * (double.Parse(scaleTextBox.Text) / 10)) + angles.Count * 700);
 
             translateYAnimation.Source = PathAnimationSource.Y;
 
