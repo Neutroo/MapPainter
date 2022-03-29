@@ -20,15 +20,15 @@ To download a copy of the project [click here](https://github.com/neutroo/MapPai
 
 3. Open bin/Debug or bin/Release and run MapPainter.exe.
 
-![ConnectPage](https://github.com/Neutroo/Neutroo/blob/main/Images/MapPainter/Screenshot%202022-03-28%20222436.png)
+![ConnectPage](https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/Screenshot%202022-03-28%20222436.png)
 
 4. Click to the connect button and start paint the route.
 
 ## Results
 <div>
   <a>
-    <img width="49%" src="https://github.com/Neutroo/Neutroo/blob/main/Images/MapPainter/hexagon_program.gif"/>
-    <img width="49%" src="https://github.com/Neutroo/Neutroo/blob/main/Images/MapPainter/hexagon_robot.gif"/>
+    <img width="49%" src="https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/hexagon_program.gif"/>
+    <img width="49%" src="https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/hexagon_robot.gif"/>
   </a>
 </div>
 
