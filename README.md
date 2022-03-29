@@ -4,11 +4,24 @@ An application for creating a route map that the robot takes over the network an
 ## Getting Started
 These instructions will get you a copy of the project, it will make it up and running on your local machine for development or usage.
 
-### Prerequisites
-1. Install scetch for the robot - [click]().
+### Robot Construction
+The robot contains of:
+* Arduino Mega 2560 R3
+* Bluetooth-module HC-06
+* Accelerometer and Gyroscope Sensor MPU-6050
+* DC Motor Driver Module L298N
+* Gearmotors (x4)
+* DC-DC Converter XL6009
+* YwRobot Breadboard Power Supply MB-V2
 
-2. Upload a scetch to an Arduino.\
-If you don't know how - read the [instruction](https://www.dummies.com/article/technology/computers/hardware/arduino/how-to-upload-a-sketch-to-an-arduino-164738/).
+Wiring schema:
+![Wiring Schema](https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/WiringSchema.png)
+
+### Prerequisites
+1. Install sketch for the robot - [click](https://github.com/Neutroo/MapPainter/releases/download/1.0/4WheelRobot.zip).
+
+2. Upload a sketch to an Arduino.\
+If you don't know how - read the [instruction](https://www.dummies.com/article/technology/computers/hardware/arduino/how-to-upload-a-sketch-to-an-arduino-164738).
 
 ### Installing
 To download a copy of the project [click here](https://github.com/neutroo/MapPainter/archive/refs/heads/master.zip).
