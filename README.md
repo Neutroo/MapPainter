@@ -19,7 +19,6 @@ Wiring schema:
 
 ### Prerequisites
 1. Install sketch for the robot - [click](https://github.com/Neutroo/MapPainter/releases/download/1.0/4WheelRobot.zip).
-
 2. Upload a sketch to an Arduino.\
 If you don't know how - read the [instruction](https://www.dummies.com/article/technology/computers/hardware/arduino/how-to-upload-a-sketch-to-an-arduino-164738).
 
