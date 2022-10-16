@@ -14,8 +14,8 @@ The robot contains of:
 * DC-DC Converter XL6009
 * YwRobot Breadboard Power Supply MB-V2
 
-Wiring schema:
-![Wiring Schema](https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/WiringSchema.png)
+Wiring diagram:
+![Wiring Diagram](https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/WiringDiagram.png)
 
 ### Prerequisites
 1. Install sketch for the robot - [click](https://github.com/Neutroo/MapPainter/releases/download/1.0/4WheelRobot.zip).
