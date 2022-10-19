@@ -27,9 +27,7 @@ To download a copy of the project [click here](https://github.com/neutroo/MapPai
 
 ### Running the project
 1. Build the project.
-
 2. Right click on the "MapPainter" in the "Solution explorer" and click on "Open folder in the explorer".
-
 3. Open bin/Debug or bin/Release and run MapPainter.exe.
 
 ![ConnectPage](https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/Screenshot%202022-03-28%20222436.png)
