@@ -34,7 +34,7 @@ To download a copy of the project [click here](https://github.com/neutroo/MapPai
 
 4. Click to the connect button and start paint the route.
 
-## Results
+## Outcome
 <div>
   <a>
     <img width="49%" src="https://raw.githubusercontent.com/Neutroo/Neutroo/main/Images/MapPainter/hexagon_program.gif"/>
